@@ -67,11 +67,19 @@ class Connect
         try
         {
             Statement statement = con.createStatement();
-            String insertSQL = "INSERT INTO Client VALUES (\'michael421@example.com\', \'Unit 2509 Box 6821 DPO AP 94156\'," +
-                    " \'5740 George Spring Apt. 746 Kylestad, Ak 15801\', 4932930475933340, 514692157701289)";
+            String insertSQL = "INSERT INTO Client VALUES (\'michael42111@example.com\', \'Unit 2509 Box 6821 DPO AP 94156\'," +
+                    " \'5740 George Spring Apt. 746 Kylestad, Ak 15801\', 4932930475935340, 514692157701289)";
             System.out.println(insertSQL);
             statement.executeUpdate(insertSQL);
-            System.out.println("\nDONE\n");
+            System.out.println("CLIENT REGISTERED\n");
+
+            insertSQL = "INSERT INTO Client VALUES (\'jessicamcgill1@example.com\', \'584 David Meadows Suite 128 Johnsonfurt, RI 82182\'," +
+                    " \'USNV Price FPO AA 56202\', 4709540832081790, 514692157701242)";
+            System.out.println(insertSQL);
+            statement.executeUpdate(insertSQL);
+            System.out.println("CLIENT REGISTERED\n");
+            System.out.println("DONE\n");
+
         }
         catch (SQLException e)
         {
