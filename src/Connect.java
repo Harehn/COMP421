@@ -4,10 +4,10 @@ class Connect
 {
     private static int sqlCode = 0;
     private static String sqlState = "00000";
+    private static Scanner scanner = new Scanner(System.in);
 
     public static void main ( String [ ] args ) throws SQLException
     {
-        Scanner scanner = new Scanner(System.in);
         try { DriverManager.registerDriver ( new com.ibm.db2.jcc.DB2Driver() ) ; }
         catch (Exception cnfe){ System.out.println("Class not found"); }
 
@@ -16,7 +16,7 @@ class Connect
         String your_password = "DaJiNi#65";
 
         Connection con = DriverManager.getConnection (url,your_userid,your_password) ;
-        Statement statement = con.createStatement ( ) ;
+        Statement statement = con.createStatement();
 
         boolean exit = false;
         while (!exit) {
@@ -26,7 +26,7 @@ class Connect
             System.out.println("    2. Modification...");
             System.out.println("    3. Get All Valid Discount Codes");
             System.out.println("    4. Query...");
-            System.out.println("    5. Query w/ submenu");
+            System.out.println("    5. Select Records From Members or Guests (submenu)");
             System.out.println("    6. Quit");
             System.out.print("Please enter your option: ");
             int input = scanner.nextInt();
@@ -47,7 +47,7 @@ class Connect
                     // function
                     break;
                 case 5:
-                    // function
+                    showMembersOrGuests(con);
                     break;
                 case 6:
                     exit = true;
@@ -116,6 +116,61 @@ class Connect
             sqlCode = e.getErrorCode();
             sqlState = e.getSQLState();
 
+            // something more meaningful than a print would be good
+            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+            System.out.println(e);
+        }
+    }
+
+    // Case 5
+    public static void showMembersOrGuests(Connection con) {
+        try
+        {
+            Statement statement = con.createStatement();
+            System.out.println("Select Table To Show First 10 Records:");
+            System.out.println("    1. Members");
+            System.out.println("    2. Guests");
+            System.out.println("Please enter a number between 1 and 2: \n");
+            int input = scanner.nextInt();
+            scanner.nextLine();
+            String table = "";
+            switch (input) {
+                case 1:
+                    table = "Member";
+                    break;
+                case 2:
+                    table = "Guest";
+                    break;
+                default:
+                    System.out.println("\nInvalid input\n");
+                    return;
+            }
+            String querySQL = "SELECT * FROM " + table + " FETCH FIRST 10 ROWS ONLY";
+            System.out.println (querySQL) ;
+            java.sql.ResultSet rs = statement.executeQuery ( querySQL ) ;
+            while ( rs.next ( ) )
+            {
+                if ("Member".equals(table)) {
+                    String email = rs.getString("email");
+                    String firstName = rs.getString("firstName");
+                    String lastName = rs.getString("lastName");
+//                    String username = rs.getString("username");
+//                    String password = rs.getString("password");
+//                    int points = rs.getInt ( "points") ;
+                    System.out.printf("EMAIL: %s, NAME: %s %s\n",
+                            email, firstName, lastName);
+                }
+                else {
+                    String email = rs.getString("email");
+                    System.out.printf("Email: %s\n", email);
+                }
+            }
+            System.out.println ("\nDONE\n");
+        }
+        catch (SQLException e)
+        {
+            sqlCode = e.getErrorCode();
+            sqlState = e.getSQLState();
             // something more meaningful than a print would be good
             System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
             System.out.println(e);
