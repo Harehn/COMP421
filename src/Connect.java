@@ -2,17 +2,15 @@ import java.sql.* ;
 import java.util.Scanner;
 class Connect
 {
+    private static int sqlCode = 0;
+    private static String sqlState = "00000";
+
     public static void main ( String [ ] args ) throws SQLException
     {
         Scanner scanner = new Scanner(System.in);
-        int sqlCode=0;
-        String sqlState="00000";
-
-        // Register driver
         try { DriverManager.registerDriver ( new com.ibm.db2.jcc.DB2Driver() ) ; }
         catch (Exception cnfe){ System.out.println("Class not found"); }
 
-        // Remove user id and password before submitting code
         String url = "jdbc:db2://winter2024-comp421.cs.mcgill.ca:50000/COMP421";
         String your_userid = "cs421g65";
         String your_password = "DaJiNi#65";
@@ -36,19 +34,19 @@ class Connect
             // Calls function depending on input (write functions below)
             switch(input) {
                 case 1:
-                    System.out.println("\nSelected 1\n");
+                    // function
                     break;
                 case 2:
-                    System.out.println("\nSelected 2\n");
+                    // function
                     break;
                 case 3:
-                    System.out.println("\nSelected 3\n");
+                    getAllValidDiscountCodes(con);
                     break;
                 case 4:
-                    System.out.println("\nSelected 4\n");
+                    // function
                     break;
                 case 5:
-                    System.out.println("\nSelected 5\n");
+                    // function
                     break;
                 case 6:
                     exit = true;
@@ -59,6 +57,43 @@ class Connect
                     break;
             }
         }
+        statement.close ( ) ;
+        con.close ( ) ;
+    }
+
+    // Case 3
+    public static void getAllValidDiscountCodes(Connection con) {
+        try
+        {
+            Statement statement = con.createStatement();
+            String querySQL = "SELECT code, valid, amt, note FROM Discount WHERE valid = TRUE";
+            System.out.println(querySQL);
+            java.sql.ResultSet rs = statement.executeQuery (querySQL) ;
+
+            System.out.println("\nValid Discount Codes:");
+            while (rs.next())
+            {
+                int code = rs.getInt("code");
+                boolean valid = rs.getBoolean("valid");
+                int amt = rs.getInt ( "amt") ;
+                String note = rs.getString ("note");
+                System.out.printf("Code: %d, Valid: %b, Amount: %d, Note: %s\n", code, valid, amt, note);
+            }
+            System.out.println ("\nDONE\n");
+        }
+        catch (SQLException e)
+        {
+            sqlCode = e.getErrorCode();
+            sqlState = e.getSQLState();
+
+            // something more meaningful than a print would be good
+            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+            System.out.println(e);
+        }
+    }
+
+
+}
 
 //        // Creating a table
 //        try
@@ -159,8 +194,3 @@ class Connect
 //            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
 //            System.out.println(e);
 //        }
-
-        statement.close ( ) ;
-        con.close ( ) ;
-    }
-}
