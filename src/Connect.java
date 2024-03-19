@@ -20,9 +20,10 @@ class Connect
 
         boolean exit = false;
         while (!exit) {
+            // Need both queries and modifications
             System.out.println("Music Store Main Menu:");
             System.out.println("    1. Register New Client");
-            System.out.println("    2. Set Discount Code to False");
+            System.out.println("    2. Modification...");
             System.out.println("    3. Get All Valid Discount Codes");
             System.out.println("    4. Query...");
             System.out.println("    5. Query w/ submenu");
@@ -34,7 +35,7 @@ class Connect
             // Calls function depending on input (write functions below)
             switch(input) {
                 case 1:
-                    // function
+                    registerNewClient(con);
                     break;
                 case 2:
                     // function
@@ -59,6 +60,27 @@ class Connect
         }
         statement.close ( ) ;
         con.close ( ) ;
+    }
+
+    // Case 1
+    public static void registerNewClient(Connection con) {
+        try
+        {
+            Statement statement = con.createStatement();
+            String insertSQL = "INSERT INTO Client VALUES (\'michael421@example.com\', \'Unit 2509 Box 6821 DPO AP 94156\'," +
+                    " \'5740 George Spring Apt. 746 Kylestad, Ak 15801\', 4932930475933340, 514692157701289)";
+            System.out.println(insertSQL);
+            statement.executeUpdate(insertSQL);
+            System.out.println("\nDONE\n");
+        }
+        catch (SQLException e)
+        {
+            sqlCode = e.getErrorCode();
+            sqlState = e.getSQLState();
+            // something more meaningful than a print would be good
+            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+            System.out.println(e);
+        }
     }
 
     // Case 3
@@ -91,8 +113,6 @@ class Connect
             System.out.println(e);
         }
     }
-
-
 }
 
 //        // Creating a table
