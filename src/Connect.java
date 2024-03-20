@@ -61,33 +61,86 @@ class Connect
         statement.close ( ) ;
         con.close ( ) ;
     }
+    
+    public static String wrap(String var) {
+    	return "\'" + var +"\'";
+    }
+    
+    public static String wrapn(String var) {
+    	return "\'" + var +"\', ";
+    }
 
     // Case 1
     public static void registerNewClient(Connection con) {
         try
         {
             Statement statement = con.createStatement();
+            System.out.print("Enter the email of the client:");
+            String email = scanner.next();
+            scanner.nextLine();
+            /*
             String insertSQL = "INSERT INTO Client VALUES (\'michael42111@example.com\', \'Unit 2509 Box 6821 DPO AP 94156\'," +
                     " \'5740 George Spring Apt. 746 Kylestad, Ak 15801\', 4932930475935340, 514692157701289)";
-            System.out.println(insertSQL);
-            statement.executeUpdate(insertSQL);
-            System.out.println("CLIENT REGISTERED\n");
+            */
+            System.out.println("Do you want to enter billing and shipping address, credit card number and phone number?");
+            System.out.println("    1. YES");
+            System.out.println("    2. NO");
+            System.out.print("Enter your choice: ");
+            int option = scanner.nextInt();
+            if (option == 1) {
+            	System.out.print("Enter your Billing Address:");
+            	scanner.nextLine(); //Don't remove. Magic line
+            	String baddr = scanner.nextLine();
+                
+                
+            	System.out.print("Enter your Shipping Address:");
+            	String saddr = scanner.nextLine();
+                
+                
+            	System.out.print("Enter your Credit Card Number(16 characters):");
+            	String crnum = scanner.next();
+                scanner.nextLine();
+                
+            	System.out.print("Enter your Phone num(15 characters):");
+            	String phone = scanner.next();
+                scanner.nextLine();
+                
+                String insertSQL = "INSERT INTO CLIENT VALUES (" + 
+                        wrapn(email) + wrapn(baddr) + wrapn(saddr) +  wrapn(crnum)
+                        + wrap(phone)
+                        +")";
+	            System.out.println(insertSQL);
+	            statement.executeUpdate(insertSQL);
+	            System.out.println("CLIENT REGISTERED\n");
+            }
+            if(option == 2) {
+            	String insertSQL = "INSERT INTO CLIENT(EMAIL) VALUES (" + 
+                        wrap(email) +")";
+	            System.out.println(insertSQL);
+	            statement.executeUpdate(insertSQL);
+	            System.out.println("CLIENT REGISTERED\n");
+            }else {
+            	System.out.println("Invalid choice, going back...");
+            }
+            
 
-            insertSQL = "INSERT INTO Client VALUES (\'jessicamcgill1@example.com\', \'584 David Meadows Suite 128 Johnsonfurt, RI 82182\'," +
-                    " \'USNV Price FPO AA 56202\', 4709540832081790, 514692157701242)";
-            System.out.println(insertSQL);
-            statement.executeUpdate(insertSQL);
-            System.out.println("CLIENT REGISTERED\n");
-            System.out.println("DONE\n");
+//            insertSQL = "INSERT INTO Client VALUES (\'jessicamcgill1@example.com\', \'584 David Meadows Suite 128 Johnsonfurt, RI 82182\'," +
+//                    " \'USNV Price FPO AA 56202\', 4709540832081790, 514692157701242)";
+//            System.out.println(insertSQL);
+//            statement.executeUpdate(insertSQL);
+//            System.out.println("CLIENT REGISTERED\n");
+//            System.out.println("DONE\n");
 
         }
         catch (SQLException e)
         {
             sqlCode = e.getErrorCode();
             sqlState = e.getSQLState();
-            // something more meaningful than a print would be good
-            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
-            System.out.println(e);
+            if (sqlCode == -803) {
+            	System.out.println("The client is already registered.");
+            }else {
+            	System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+            }
         }
     }
 
