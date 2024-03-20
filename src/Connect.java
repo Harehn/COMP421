@@ -20,17 +20,19 @@ class Connect
 
         boolean exit = false;
         while (!exit) {
+            // Need both queries and modifications
             System.out.println("Music Store Main Menu:");
             System.out.println("    1. Register New Client");
             System.out.println("    2. Create Table For Users With Points");
             System.out.println("    3. Get All Valid Discount Codes");
-            System.out.println("    4. Update Product Price");
+            System.out.println("    4. Query...");
             System.out.println("    5. Select Records From Members or Guests (submenu)");
             System.out.println("    6. Quit");
             System.out.print("Please enter your option: ");
             int input = scanner.nextInt();
             scanner.nextLine();
 
+            // Calls function depending on input (write functions below)
             switch(input) {
                 case 1:
                     registerNewClient(con);
@@ -42,7 +44,7 @@ class Connect
                     getAllValidDiscountCodes(con);
                     break;
                 case 4:
-                    updateProductPrice(con);
+                    // function
                     break;
                 case 5:
                     showMembersOrGuests(con);
@@ -83,6 +85,7 @@ class Connect
         {
             sqlCode = e.getErrorCode();
             sqlState = e.getSQLState();
+            // something more meaningful than a print would be good
             System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
             System.out.println(e);
         }
@@ -101,16 +104,38 @@ class Connect
                     "SELECT email, points FROM Member WHERE points > 0";
             System.out.println(insertSQL);
             statement.executeUpdate(insertSQL);
-            System.out.println("\nDONE\n");
+            //System.out.println("\nDONE\n");
         }
         catch (SQLException e)
         {
             sqlCode = e.getErrorCode();
             sqlState = e.getSQLState();
-            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
-            System.out.println(e);
+            if (sqlCode == -803) {
+            	System.out.println("The table has already been created.");
+            }else {
+            	System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+            }
+            //System.out.println(e);
         }
-
+        try {
+        	Statement statement = con.createStatement();
+        	String selectSQL = "SELECT * FROM UsersWithPoints LIMIT 10";
+            System.out.println(selectSQL);
+            java.sql.ResultSet rs = statement.executeQuery(selectSQL);
+            System.out.println("Printing a maximum of 10 results from the table.");
+            while (rs.next())
+            {
+                String email = rs.getString("email");
+                int points = rs.getInt ( "points") ;
+                System.out.printf("Email: %s, Points: %d\n",email, points);
+            }
+            System.out.println("\nDONE\n");
+        }catch (SQLException e){
+        	System.out.println("Issues with accessing table.");
+        }catch (Exception e) {
+        	System.out.println("Unexpected Error.");
+        	System.out.println(e);
+        }
     }
 
     // Case 3
@@ -137,31 +162,8 @@ class Connect
         {
             sqlCode = e.getErrorCode();
             sqlState = e.getSQLState();
-            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
-            System.out.println(e);
-        }
-    }
 
-    // Case 4
-    public static void updateProductPrice(Connection con) {
-        try
-        {
-            Statement statement = con.createStatement();
-            String updateSQL = "UPDATE " + tableName + " SET NAME = \'Mimi\' WHERE id = 3";
-            System.out.println(updateSQL);
-            statement.executeUpdate(updateSQL);
-            System.out.println("DONE");
-
-            // Dropping a table
-            String dropSQL = "DROP TABLE " + tableName;
-            System.out.println ( dropSQL ) ;
-            statement.executeUpdate ( dropSQL ) ;
-            System.out.println ("DONE");
-        }
-        catch (SQLException e)
-        {
-            sqlCode = e.getErrorCode();
-            sqlState = e.getSQLState();
+            // something more meaningful than a print would be good
             System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
             System.out.println(e);
         }
@@ -213,8 +215,34 @@ class Connect
         {
             sqlCode = e.getErrorCode();
             sqlState = e.getSQLState();
+            // something more meaningful than a print would be good
             System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
             System.out.println(e);
         }
     }
 }
+//
+//        //Updating a table
+//        try
+//        {
+//            String updateSQL = "UPDATE " + tableName + " SET NAME = \'Mimi\' WHERE id = 3";
+//            System.out.println(updateSQL);
+//            statement.executeUpdate(updateSQL);
+//            System.out.println("DONE");
+//
+//            // Dropping a table
+//            String dropSQL = "DROP TABLE " + tableName;
+//            System.out.println ( dropSQL ) ;
+//            statement.executeUpdate ( dropSQL ) ;
+//            System.out.println ("DONE");
+//        }
+//        catch (SQLException e)
+//        {
+//            sqlCode = e.getErrorCode(); // Get SQLCODE
+//            sqlState = e.getSQLState(); // Get SQLSTATE
+//
+//            // Your code to handle errors comes here;
+//            // something more meaningful than a print would be good
+//            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+//            System.out.println(e);
+//        }
