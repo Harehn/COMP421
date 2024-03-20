@@ -23,7 +23,7 @@ class Connect
             // Need both queries and modifications
             System.out.println("Music Store Main Menu:");
             System.out.println("    1. Register New Client");
-            System.out.println("    2. Modification...");
+            System.out.println("    2. Create Table For Users With Points");
             System.out.println("    3. Get All Valid Discount Codes");
             System.out.println("    4. Query...");
             System.out.println("    5. Select Records From Members or Guests (submenu)");
@@ -38,7 +38,7 @@ class Connect
                     registerNewClient(con);
                     break;
                 case 2:
-                    // function
+                    makeTableUsersWithPoints(con);
                     break;
                 case 3:
                     getAllValidDiscountCodes(con);
@@ -89,6 +89,31 @@ class Connect
             System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
             System.out.println(e);
         }
+    }
+
+    // Case 2
+    public static void makeTableUsersWithPoints(Connection con) {
+        try
+        {
+            Statement statement = con.createStatement();
+            String createSQL = "CREATE TABLE IF NOT EXISTS UsersWithPoints (" +
+                    "email varchar(50) NOT NULL, points INTEGER, PRIMARY KEY(email))";
+            System.out.println (createSQL ) ;
+            statement.executeUpdate (createSQL ) ;
+            String insertSQL = "INSERT INTO UsersWithPoints (email, points)" +
+                    "SELECT email, points FROM Member WHERE points > 0";
+            System.out.println(insertSQL);
+            statement.executeUpdate(insertSQL);
+            System.out.println("\nDONE\n");
+        }
+        catch (SQLException e)
+        {
+            sqlCode = e.getErrorCode();
+            sqlState = e.getSQLState();
+            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+            System.out.println(e);
+        }
+
     }
 
     // Case 3
@@ -154,9 +179,6 @@ class Connect
                     String email = rs.getString("email");
                     String firstName = rs.getString("firstName");
                     String lastName = rs.getString("lastName");
-//                    String username = rs.getString("username");
-//                    String password = rs.getString("password");
-//                    int points = rs.getInt ( "points") ;
                     System.out.printf("EMAIL: %s, NAME: %s %s\n",
                             email, firstName, lastName);
                 }
@@ -177,81 +199,6 @@ class Connect
         }
     }
 }
-
-//        // Creating a table
-//        try
-//        {
-//            String createSQL = "CREATE TABLE " + tableName + " (id INTEGER, name VARCHAR (25)) ";
-//            System.out.println (createSQL ) ;
-//            statement.executeUpdate (createSQL ) ;
-//            System.out.println ("DONE");
-//        }
-//        catch (SQLException e)
-//        {
-//            sqlCode = e.getErrorCode(); // Get SQLCODE
-//            sqlState = e.getSQLState(); // Get SQLSTATE
-//
-//            // Your code to handle errors comes here;
-//            // something more meaningful than a print would be good
-//            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
-//            System.out.println(e);
-//        }
-//
-//        // Inserting Data into the table
-//        try
-//        {
-//            String insertSQL = "INSERT INTO " + tableName + " VALUES ( 1 , \'Vicki\' ) " ;
-//            System.out.println ( insertSQL ) ;
-//            statement.executeUpdate ( insertSQL ) ;
-//            System.out.println ( "DONE" ) ;
-//
-//            insertSQL = "INSERT INTO " + tableName + " VALUES ( 2 , \'Vera\' ) " ;
-//            System.out.println ( insertSQL ) ;
-//            statement.executeUpdate ( insertSQL ) ;
-//            System.out.println ( "DONE" ) ;
-//            insertSQL = "INSERT INTO " + tableName + " VALUES ( 3 , \'Franca\' ) " ;
-//            System.out.println ( insertSQL ) ;
-//            statement.executeUpdate ( insertSQL ) ;
-//            System.out.println ( "DONE" ) ;
-//
-//        }
-//        catch (SQLException e)
-//        {
-//            sqlCode = e.getErrorCode(); // Get SQLCODE
-//            sqlState = e.getSQLState(); // Get SQLSTATE
-//
-//            // Your code to handle errors comes here;
-//            // something more meaningful than a print would be good
-//            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
-//            System.out.println(e);
-//        }
-//
-//        // Querying a table
-//        try
-//        {
-//            String querySQL = "SELECT id, name from " + tableName + " WHERE NAME = \'Vicki\'";
-//            System.out.println (querySQL) ;
-//            java.sql.ResultSet rs = statement.executeQuery ( querySQL ) ;
-//
-//            while ( rs.next ( ) )
-//            {
-//                int id = rs.getInt ( 1 ) ;
-//                String name = rs.getString (2);
-//                System.out.println ("id:  " + id);
-//                System.out.println ("name:  " + name);
-//            }
-//            System.out.println ("DONE");
-//        }
-//        catch (SQLException e)
-//        {
-//            sqlCode = e.getErrorCode(); // Get SQLCODE
-//            sqlState = e.getSQLState(); // Get SQLSTATE
-//
-//            // Your code to handle errors comes here;
-//            // something more meaningful than a print would be good
-//            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
-//            System.out.println(e);
-//        }
 //
 //        //Updating a table
 //        try
