@@ -25,7 +25,7 @@ class Connect
             System.out.println("    1. Register New Client");
             System.out.println("    2. Create Table For Users With Points");
             System.out.println("    3. Get All Valid Discount Codes");
-            System.out.println("    4. Query...");
+            System.out.println("    4. Update Member Points");
             System.out.println("    5. Select Records From Members or Guests (submenu)");
             System.out.println("    6. Quit");
             System.out.print("Please enter your option: ");
@@ -44,7 +44,7 @@ class Connect
                     getAllValidDiscountCodes(con);
                     break;
                 case 4:
-                    // function
+                    updateMemberPoints(con);
                     break;
                 case 5:
                     showMembersOrGuests(con);
@@ -220,6 +220,35 @@ class Connect
         }
         System.out.println("-------------------------------------------------------");
     }
+
+    // Case 4
+    public static void updateMemberPoints(Connection con) {
+        System.out.println("-------------------------------------------------------");
+        try {
+            Statement statement = con.createStatement();
+            System.out.print("Enter email of member you want to update points for: ");
+            String email = scanner.next();
+            scanner.nextLine();
+            System.out.print("Enter new points: ");
+            int points = scanner.nextInt();
+            scanner.nextLine();
+            String updateSQL = "UPDATE Member SET points = " + points + " WHERE email = " + wrap(email);
+            System.out.println(updateSQL);
+            statement.executeUpdate(updateSQL);
+            System.out.println("\nDONE\n");
+        }
+        catch (SQLException e)
+        {
+            sqlCode = e.getErrorCode();
+            sqlState = e.getSQLState();
+            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+        }catch (Exception e) {
+            System.out.println("Unexpected Error.");
+            System.out.println(e);
+        }
+        System.out.println("-------------------------------------------------------");
+    }
+
 
     // Case 5
     public static void showMembersOrGuests(Connection con) {
