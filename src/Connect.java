@@ -233,13 +233,21 @@ class Connect
             System.out.print("Enter email of member you want to update points for: ");
             String email = scanner.next();
             scanner.nextLine();
-            System.out.print("Enter new points: ");
-            int points = scanner.nextInt();
-            scanner.nextLine();
-            String updateSQL = "UPDATE Member SET points = " + points + " WHERE email = " + wrap(email);
-            System.out.println(updateSQL);
-            statement.executeUpdate(updateSQL);
-            System.out.println("\nDONE\n");
+
+            String checkEmail = "SELECT COUNT(*) FROM Member WHERE email = " + wrap(email);
+            ResultSet rs = statement.executeQuery(checkEmail);
+            if (rs.next() && rs.getInt(1) == 1) {
+                System.out.print("Enter new points: ");
+                int points = scanner.nextInt();
+                scanner.nextLine();
+                String updateSQL = "UPDATE Member SET points = " + points + " WHERE email = " + wrap(email);
+                System.out.println(updateSQL);
+                statement.executeUpdate(updateSQL);
+                System.out.println("\nDONE\n");
+            }
+            else {
+                System.out.println("Email does not exist");
+            }
         }
         catch (SQLException e)
         {
