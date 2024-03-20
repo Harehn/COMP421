@@ -60,6 +60,7 @@ class Connect
         }
         statement.close ( ) ;
         con.close ( ) ;
+        System.out.println("Program teminated with all resources closed.");
     }
     
     public static String wrap(String var) {
@@ -72,16 +73,13 @@ class Connect
 
     // Case 1
     public static void registerNewClient(Connection con) {
+    	System.out.println("-------------------------------------------------------");
         try
         {
             Statement statement = con.createStatement();
             System.out.print("Enter the email of the client:");
             String email = scanner.next();
             scanner.nextLine();
-            /*
-            String insertSQL = "INSERT INTO Client VALUES (\'michael42111@example.com\', \'Unit 2509 Box 6821 DPO AP 94156\'," +
-                    " \'5740 George Spring Apt. 746 Kylestad, Ak 15801\', 4932930475935340, 514692157701289)";
-            */
             System.out.println("Do you want to enter billing and shipping address, credit card number and phone number?");
             System.out.println("    1. YES");
             System.out.println("    2. NO");
@@ -91,7 +89,6 @@ class Connect
             	System.out.print("Enter your Billing Address:");
             	scanner.nextLine(); //Don't remove. Magic line
             	String baddr = scanner.nextLine();
-                
                 
             	System.out.print("Enter your Shipping Address:");
             	String saddr = scanner.nextLine();
@@ -113,7 +110,7 @@ class Connect
 	            statement.executeUpdate(insertSQL);
 	            System.out.println("CLIENT REGISTERED\n");
             }
-            if(option == 2) {
+            else if(option == 2) {
             	String insertSQL = "INSERT INTO CLIENT(EMAIL) VALUES (" + 
                         wrap(email) +")";
 	            System.out.println(insertSQL);
@@ -123,13 +120,7 @@ class Connect
             	System.out.println("Invalid choice, going back...");
             }
             
-
-//            insertSQL = "INSERT INTO Client VALUES (\'jessicamcgill1@example.com\', \'584 David Meadows Suite 128 Johnsonfurt, RI 82182\'," +
-//                    " \'USNV Price FPO AA 56202\', 4709540832081790, 514692157701242)";
-//            System.out.println(insertSQL);
-//            statement.executeUpdate(insertSQL);
-//            System.out.println("CLIENT REGISTERED\n");
-//            System.out.println("DONE\n");
+            System.out.println("DONE\n");
 
         }
         catch (SQLException e)
@@ -141,11 +132,16 @@ class Connect
             }else {
             	System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
             }
+        }catch (Exception e) {
+        	System.out.println("Unexpected Error.");
+        	System.out.println(e);
         }
+        System.out.println("-------------------------------------------------------");
     }
 
     // Case 2
     public static void makeTableUsersWithPoints(Connection con) {
+    	System.out.println("-------------------------------------------------------");
         try
         {
             Statement statement = con.createStatement();
@@ -157,7 +153,6 @@ class Connect
                     "SELECT email, points FROM Member WHERE points > 0";
             System.out.println(insertSQL);
             statement.executeUpdate(insertSQL);
-            //System.out.println("\nDONE\n");
         }
         catch (SQLException e)
         {
@@ -168,7 +163,6 @@ class Connect
             }else {
             	System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
             }
-            //System.out.println(e);
         }
         try {
         	Statement statement = con.createStatement();
@@ -189,10 +183,12 @@ class Connect
         	System.out.println("Unexpected Error.");
         	System.out.println(e);
         }
+        System.out.println("-------------------------------------------------------");
     }
 
     // Case 3
     public static void getAllValidDiscountCodes(Connection con) {
+    	System.out.println("-------------------------------------------------------");
         try
         {
             Statement statement = con.createStatement();
@@ -218,12 +214,16 @@ class Connect
 
             // something more meaningful than a print would be good
             System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
-            System.out.println(e);
+        }catch (Exception e) {
+        	System.out.println("Unexpected Error.");
+        	System.out.println(e);
         }
+        System.out.println("-------------------------------------------------------");
     }
 
     // Case 5
     public static void showMembersOrGuests(Connection con) {
+    	System.out.println("-------------------------------------------------------");
         try
         {
             Statement statement = con.createStatement();
@@ -270,32 +270,10 @@ class Connect
             sqlState = e.getSQLState();
             // something more meaningful than a print would be good
             System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
-            System.out.println(e);
+        }catch (Exception e) {
+        	System.out.println("Unexpected Error.");
+        	System.out.println(e);
         }
+        System.out.println("-------------------------------------------------------");
     }
 }
-//
-//        //Updating a table
-//        try
-//        {
-//            String updateSQL = "UPDATE " + tableName + " SET NAME = \'Mimi\' WHERE id = 3";
-//            System.out.println(updateSQL);
-//            statement.executeUpdate(updateSQL);
-//            System.out.println("DONE");
-//
-//            // Dropping a table
-//            String dropSQL = "DROP TABLE " + tableName;
-//            System.out.println ( dropSQL ) ;
-//            statement.executeUpdate ( dropSQL ) ;
-//            System.out.println ("DONE");
-//        }
-//        catch (SQLException e)
-//        {
-//            sqlCode = e.getErrorCode(); // Get SQLCODE
-//            sqlState = e.getSQLState(); // Get SQLSTATE
-//
-//            // Your code to handle errors comes here;
-//            // something more meaningful than a print would be good
-//            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
-//            System.out.println(e);
-//        }
