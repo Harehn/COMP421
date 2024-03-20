@@ -12,9 +12,13 @@ class Connect
         catch (Exception cnfe){ System.out.println("Class not found"); }
 
         String url = "jdbc:db2://winter2024-comp421.cs.mcgill.ca:50000/COMP421";
-        String your_userid = "cs421g65";
-        String your_password = "DaJiNi#65";
-
+        System.out.print("Username:");
+        String your_userid = scanner.next();
+        scanner.nextLine();
+        System.out.print("Password:");
+        String your_password = scanner.next();
+        scanner.nextLine();
+        
         Connection con = DriverManager.getConnection (url,your_userid,your_password) ;
         Statement statement = con.createStatement();
 
